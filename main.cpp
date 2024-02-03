@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// Base class for Animal
 class Animal{
 protected:
     string breed;
@@ -24,6 +25,7 @@ public:
     virtual ~Animal() {};
 };
 
+// Derived class for Dog
 class Dog: public Animal{
     int age;
 public:
@@ -48,6 +50,7 @@ public:
     ~Dog(){};
 };
 
+// Overloaded extraction operator for input of Dog
 istream& operator>>(istream& in, Dog& obj){
     cout<<"Enter data for dog\n";
     cout<<"Enter breed: ";
@@ -74,6 +77,7 @@ istream& operator>>(istream& in, Dog& obj){
    
 }
 
+// Overloaded insertion operator for output of Dog
 ostream& operator<<(ostream& out,const Dog& obj){
     cout<<"Dog\n";
     cout<<"Breed: "<<obj.breed<<endl;
@@ -82,6 +86,7 @@ ostream& operator<<(ostream& out,const Dog& obj){
     return out;
 }
 
+// Derived class for Cat
 class Cat: public Animal{
     string color;
 public:
@@ -104,6 +109,8 @@ public:
     friend ostream& operator<<(ostream&,const Cat&);
     ~Cat(){};
 };
+
+// Overloaded extraction operator for input of Cat
 istream& operator>>(istream& in, Cat& obj){
     cout<<"Enter data for cat\n";
     cout<<"Enter breed: ";
@@ -118,6 +125,7 @@ istream& operator>>(istream& in, Cat& obj){
    
 }
 
+// Overloaded insertion operator for output of Cat
 ostream& operator<<(ostream& out,const Cat& obj){
     cout<<"Cat\n";
     cout<<"Breed: "<<obj.breed<<endl;
@@ -126,6 +134,7 @@ ostream& operator<<(ostream& out,const Cat& obj){
     return out;
 }
 
+// Function to write animals data to a file
 void writeAnimalsToFile(const vector<Animal*>& animals, const string& filename) {
     ofstream outFile(filename, ios::out | ios::trunc);
 
