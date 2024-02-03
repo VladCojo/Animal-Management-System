@@ -5,6 +5,7 @@
 #include <string>
 #include <exception>
 #include <cstdlib>
+#include <fstream>
 
 using namespace std;
 
@@ -16,6 +17,7 @@ public:
     Animal(){};
     virtual void getData(istream& in) = 0;
     virtual void displayData(ostream& out) = 0;
+    virtual void saveToFile(ofstream& file) const = 0;
     string getName() const{
         return name;
     }
@@ -32,6 +34,13 @@ public:
     }
     void displayData(ostream& out){
         cout<<*this;
+    }
+
+    void saveToFile(ofstream& file) const override {
+        file << "Dog\n";
+        file << "Breed: " << breed << endl;
+        file << "Name: " << name << endl;
+        file << "Age: " << age << endl;
     }
 
     friend istream& operator>>(istream&, Dog&);
@@ -84,6 +93,13 @@ public:
         cout<<*this;
     }
 
+    void saveToFile(ofstream& file) const override {
+        file << "Cat\n";
+        file << "Breed: " << breed << endl;
+        file << "Name: " << name << endl;
+        file << "Color: " << color << endl;
+    }
+
     friend istream& operator>>(istream&, Cat&);
     friend ostream& operator<<(ostream&,const Cat&);
     ~Cat(){};
@@ -110,18 +126,37 @@ ostream& operator<<(ostream& out,const Cat& obj){
     return out;
 }
 
+void writeAnimalsToFile(const vector<Animal*>& animals, const string& filename) {
+    ofstream outFile(filename, ios::out | ios::trunc);
+
+    if (!outFile.is_open()) {
+        cerr << "Error: Unable to open file for writing.\n";
+        return;
+    }
+
+    for (const auto& animal : animals) {
+        animal->saveToFile(outFile);
+        outFile << "\n";
+    }
+
+    outFile.close();
+    cout << "Animals data has been written to the file: " << filename << endl;
+}
 
 int main(){
     vector<Animal*> animals;
     Animal *newanimal;
     int opt;
-
+    string filename, deleteName;
+    auto it = animals.begin();
     do{
         cout<<"0. Exit"<<endl;
         cout<<"1. Add a dog"<<endl;
         cout<<"2. Add a cat"<<endl;
         cout<<"3. Display vector of animals"<<endl;
         cout<<"4. Sort by name(ascending order)"<<endl;
+        cout<<"5. Delete animal by name"<<endl;
+        cout<<"6. Create file and add current vector to it"<<endl;
         cout<<"Choose an option: ";
         cin>>opt;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -162,7 +197,35 @@ int main(){
                     cout << "\n";
                 }
                 break;
+            
+            case 5:
+                cout<<"Enter name you want to delete: ";
+                getline(cin, deleteName);
 
+                it = animals.begin();
+                while (it != animals.end()) {
+                    it = find_if(it, animals.end(), [deleteName](const Animal* a) {
+                        return a->getName() == deleteName;
+                    });
+
+                    if (it != animals.end()) {
+                        // Animal found, delete it
+                        delete *it;
+                        it = animals.erase(it);
+                        cout << "Animal with name '" << deleteName << "' has been deleted.\n";
+                    }
+                }
+            break;
+
+            case 6:
+                cout<<"Enter file name: ";
+                getline(cin, filename);
+                writeAnimalsToFile(animals, filename);
+            break;
+
+            default:
+                cout<<"Invalid option\n";
+            break;
         }
 
 
