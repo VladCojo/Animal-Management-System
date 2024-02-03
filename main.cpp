@@ -16,7 +16,9 @@ public:
     Animal(){};
     virtual void getData(istream& in) = 0;
     virtual void displayData(ostream& out) = 0;
-
+    string getName() const{
+        return name;
+    }
     virtual ~Animal() {};
 };
 
@@ -101,7 +103,7 @@ istream& operator>>(istream& in, Cat& obj){
 }
 
 ostream& operator<<(ostream& out,const Cat& obj){
-    cout<<"Dog\n";
+    cout<<"Cat\n";
     cout<<"Breed: "<<obj.breed<<endl;
     cout<<"Name: "<<obj.name<<endl;
     cout<<"Color: "<<obj.color<<endl;
@@ -119,6 +121,7 @@ int main(){
         cout<<"1. Add a dog"<<endl;
         cout<<"2. Add a cat"<<endl;
         cout<<"3. Display vector of animals"<<endl;
+        cout<<"4. Sort by name(ascending order)"<<endl;
         cout<<"Choose an option: ";
         cin>>opt;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -146,6 +149,19 @@ int main(){
                     cout<<"\n";
                 }
             break;
+
+            case 4:
+                sort(animals.begin(), animals.end(), [](const Animal* a1, const Animal* a2) {
+                    return a1->getName() < a2->getName();
+                });
+
+                
+                cout << "Sorted by name (ascending order):" << endl;
+                for (auto& it : animals) {
+                    it->displayData(cout);
+                    cout << "\n";
+                }
+                break;
 
         }
 
