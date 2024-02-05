@@ -16,3 +16,11 @@ This C++ program is an Animal Management System that allows users to add, displa
 
    ```bash
    g++ main.cpp -o main
+
+## Notes
+
+   * The program utilizes file handling to save and load animal data, demonstrating basic I/O operations in C++.
+
+   * Object-oriented concepts such as polymorphism and inheritance are employed for designing the animal classes.
+
+   * Error handling is implemented to ensure the integrity of the entered data.
