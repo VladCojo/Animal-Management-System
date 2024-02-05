@@ -12,7 +12,7 @@ This C++ program is an Animal Management System that allows users to add, displa
 
 ## Usage
 
-1. **Compile**: Compile the `main.cpp` file using a C++ compiler to generate the executable file. (or simply use the provided "main" file witch is already compiled)
+1. **Compile**: Compile the `main.cpp` file using a C++ compiler to generate the executable file. (or simply use the provided "main" file which is already compiled)
 
    ```bash
    g++ main.cpp -o main
