@@ -1,9 +1,29 @@
 Dog
-Breed:Andrei
-Name:Nucont
-Age:20
-Cat
-Breed:nuconteaza
-Name:Vasile
-Color:red
+Breed:Akita
+Name:Zeus
+Age:12
 
+Cat
+Breed:Aegean
+Name:Alex
+Color:Brown
+
+Cat
+Breed:Abyssinian
+Name:Ovidiu
+Color:Orange
+
+Dog
+Breed:Doberman
+Name:Rex
+Age:9
+
+Dog
+Breed:Alaskan Malamute
+Name:Francis
+Age:3
+
+Dog
+Breed:Alaskan Klee Kai
+Name:Romeo
+Age:15
