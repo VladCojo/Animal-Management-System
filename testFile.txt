@@ -1,0 +1,9 @@
+Dog
+Breed:Andrei
+Name:Nucont
+Age:20
+Cat
+Breed:nuconteaza
+Name:Vasile
+Color:red
+

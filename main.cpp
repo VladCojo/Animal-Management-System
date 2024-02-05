@@ -19,6 +19,13 @@ public:
     virtual void getData(istream& in) = 0;
     virtual void displayData(ostream& out) = 0;
     virtual void saveToFile(ofstream& file) const = 0;
+    virtual void readFromFile(ifstream& file){
+        file.ignore(numeric_limits<streamsize>::max(), ':');
+        getline(file, breed);
+
+        file.ignore(numeric_limits<streamsize>::max(), ':');
+        getline(file,name);
+    }
     string getName() const{
         return name;
     }
@@ -40,9 +47,20 @@ public:
 
     void saveToFile(ofstream& file) const override {
         file << "Dog\n";
-        file << "Breed: " << breed << endl;
-        file << "Name: " << name << endl;
-        file << "Age: " << age << endl;
+        file << "Breed:" << breed << endl;
+        file << "Name:" << name << endl;
+        file << "Age:" << age << endl;
+    }
+
+    void readFromFile(ifstream& file)override{
+        string ageStr;
+        
+        Animal::readFromFile(file);
+        file.ignore(numeric_limits<streamsize>::max(), ':');
+        getline(file, ageStr);
+        age = stoi(ageStr);
+
+        
     }
 
     friend istream& operator>>(istream&, Dog&);
@@ -100,9 +118,15 @@ public:
 
     void saveToFile(ofstream& file) const override {
         file << "Cat\n";
-        file << "Breed: " << breed << endl;
-        file << "Name: " << name << endl;
-        file << "Color: " << color << endl;
+        file << "Breed:" << breed << endl;
+        file << "Name:" << name << endl;
+        file << "Color:" << color << endl;
+    }
+
+     void readFromFile(ifstream& file) override{
+        Animal::readFromFile(file);
+        file.ignore(numeric_limits<streamsize>::max(), ':');
+        getline(file, color);
     }
 
     friend istream& operator>>(istream&, Cat&);
@@ -139,17 +163,51 @@ void writeAnimalsToFile(const vector<Animal*>& animals, const string& filename) 
     ofstream outFile(filename, ios::out | ios::trunc);
 
     if (!outFile.is_open()) {
-        cerr << "Error: Unable to open file for writing.\n";
+        cout<<"Error: Unable to open file for writing.\n";
         return;
     }
 
     for (const auto& animal : animals) {
         animal->saveToFile(outFile);
-        outFile << "\n";
+        outFile<<"\n";
     }
 
     outFile.close();
-    cout << "Animals data has been written to the file: " << filename << endl;
+    cout<<"Animals data has been written to the file: "<<filename<<endl;
+}
+
+void readAnimalsFromFile(vector<Animal*>& animals, const string& filename){
+    ifstream inFile(filename);
+    Animal* newanimal;
+
+    if(!inFile.is_open()){
+        cout<<"Error: Unable to open file for reading.\n";
+        return;
+    }
+
+    for(auto& animal: animals)
+        delete animal;
+
+    animals.clear();
+
+    string line;
+
+    while(getline(inFile, line)){
+        if(line == "Dog"){
+            newanimal = new Dog;
+            newanimal->readFromFile(inFile);
+            animals.push_back(newanimal);
+
+        } else if (line == "Cat"){
+            newanimal = new Cat;
+            newanimal->readFromFile(inFile);
+            animals.push_back(newanimal);
+
+        }
+    }
+
+    inFile.close();
+    cout<<"Animals data has been read from the file: "<<filename<<endl;
 }
 
 int main(){
@@ -165,7 +223,8 @@ int main(){
         cout<<"3. Display vector of animals"<<endl;
         cout<<"4. Sort by name(ascending order)"<<endl;
         cout<<"5. Delete animal by name"<<endl;
-        cout<<"6. Create file and add current vector to it"<<endl;
+        cout<<"6. Create file and add current vector to it (if the file exists it gets cleared)"<<endl;
+        cout<<"7. Read animals from file and add them to vector (current vector gets cleared)"<<endl;
         cout<<"Choose an option: ";
         cin>>opt;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -230,6 +289,12 @@ int main(){
                 cout<<"Enter file name: ";
                 getline(cin, filename);
                 writeAnimalsToFile(animals, filename);
+            break;
+
+            case 7:
+                cout<<"Enter file name: ";
+                getline(cin, filename);
+                readAnimalsFromFile(animals, filename);
             break;
 
             default:
